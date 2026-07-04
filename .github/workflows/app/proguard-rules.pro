@@ -1,0 +1,2 @@
+-keep class com.jarvis.automation.** { *; }
+-dontwarn com.jarvis.automation.**
