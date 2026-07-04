@@ -7,6 +7,9 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  PROJECT_ROOT: .github/workflows
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,17 +35,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.7
+          build-root-directory: ${{ env.PROJECT_ROOT }}
 
-      - name: Auto-Locate and Build APK
-        run: |
-          # यह कमांड आपके उलझे हुए फोल्डर्स के अंदर जाकर सही जगह ढूंढेगी
-          TARGET_DIR=$(find . -name "settings.gradle" -exec dirname {} \;)
-          echo "Found project directory at: $TARGET_DIR"
-          cd "$TARGET_DIR"
-          gradle assembleDebug --stacktrace --no-daemon
+      - name: Build Debug APK
+        working-directory: ${{ env.PROJECT_ROOT }}
+        run: gradle assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: JarvisAutomation-debug-apk
-          path: "**/build/outputs/apk/debug/*.apk"
+          path: .github/workflows/app/build/outputs/apk/debug/app-debug.apk
