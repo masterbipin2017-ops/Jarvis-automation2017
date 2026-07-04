@@ -33,9 +33,13 @@ jobs:
         with:
           gradle-version: 8.7
 
-      - name: Build Debug APK from Workflows Folder
-        run: gradle assembleDebug --stacktrace --no-daemon
-        working-directory: .github/workflows
+      - name: Auto-Locate and Build APK
+        run: |
+          # यह कमांड आपके उलझे हुए फोल्डर्स के अंदर जाकर सही जगह ढूंढेगी
+          TARGET_DIR=$(find . -name "settings.gradle" -exec dirname {} \;)
+          echo "Found project directory at: $TARGET_DIR"
+          cd "$TARGET_DIR"
+          gradle assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
