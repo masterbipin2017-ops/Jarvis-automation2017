@@ -33,11 +33,12 @@ jobs:
         with:
           gradle-version: 8.7
 
-      - name: Build Debug APK
+      - name: Build Debug APK from Workflows Folder
         run: gradle assembleDebug --stacktrace --no-daemon
+        working-directory: .github/workflows
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: JarvisAutomation-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: "**/build/outputs/apk/debug/*.apk"
